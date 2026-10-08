@@ -1,0 +1,142 @@
+# TP-SF-LOGIN-001: Salesforce Login Page Test Plan
+
+**Status:** Draft approved for delivery  
+**Prepared:** 2026-10-06  
+**Template:** RICE POT Generic QA Template, Profile B - Test Plan  
+**Scope:** Salesforce login page only
+
+## 1. Test Plan ID and Title
+
+TP-SF-LOGIN-001 - Salesforce Login Page Test Plan
+
+## 2. Objective and References
+
+Define comprehensive positive, negative, and security-oriented test coverage for the Salesforce login page. This is a test plan; it does not claim that the planned scenarios have been executed.
+
+References:
+- Salesforce Selenium Framework README and test configuration.
+- Existing valid-login and invalid-login test implementations.
+- RICE POT Generic QA Template, Test Plan profile.
+
+No formal product requirement IDs or approved acceptance criteria were supplied. The LP and SEC IDs in this document are locally assigned for traceability.
+
+## 3. In Scope and Out of Scope
+
+In scope:
+- Valid and invalid credential outcomes.
+- Empty, malformed, whitespace-only, and boundary-length field inputs.
+- Remember Me control behavior.
+- Login submission by button and, if supported by the page, Enter key.
+- Observable navigation after successful authentication.
+- Controlled login-page security checks in an authorized non-production Salesforce org.
+- Regression checks for the login-page flows above.
+
+Out of scope:
+- Password reset, account registration, and post-login Salesforce functionality.
+- MFA, SSO, CAPTCHA, and Salesforce A/B variants as test objectives. Record these only when they prevent a planned test from proceeding.
+- Load, stress, or broad penetration testing.
+- Injection, repeated-failure, lockout, or rate-limit testing against Salesforce's shared public login endpoint.
+
+## 4. Requirements and Planned Coverage
+
+All LP and SEC identifiers below are locally assigned. Expected outcomes that depend on undocumented Salesforce behavior are proposed and require confirmation by the Salesforce org owner before execution.
+
+| ID | Scenario | Planned expected result | Preconditions / notes |
+|---|---|---|---|
+| LP-01 | Submit valid username and password | Authentication succeeds and the browser leaves the login page. | Blocked until a non-production test account is provisioned. |
+| LP-02 | Submit valid credentials with Remember Me off | Authentication succeeds; the login page does not retain the user beyond the configured behavior. | Exact persistence behavior requires product/org-owner confirmation. |
+| LP-03 | Submit valid credentials with Remember Me on | Authentication succeeds and the selected Remember Me behavior is observed. | Blocked until an account is available; do not assume persistence duration. |
+| LP-04 | Submit an existing username with an incorrect password | Authentication is denied and no authenticated state is created. | Use an approved non-production account if an existing username is required. |
+| LP-05 | Submit an unknown username and synthetic password | Authentication is denied and no authenticated state is created. | Use synthetic data that is not associated with a real person or account. |
+| LP-06 | Leave username empty and provide a password | Authentication is prevented or denied; no authenticated state is created. | Exact validation text is not specified. |
+| LP-07 | Provide a username and leave password empty | Authentication is prevented or denied; no authenticated state is created. | Exact validation text is not specified. |
+| LP-08 | Leave both fields empty | Authentication is prevented or denied; no authenticated state is created. | Exact validation text is not specified. |
+| LP-09 | Provide malformed username formats | Authentication is denied; no authenticated state is created. | Acceptance of username formats must be confirmed; do not prescribe exact error text. |
+| LP-10 | Provide whitespace-only values | Authentication is denied; no authenticated state is created. | Verify field trimming behavior without assuming undocumented normalization. |
+| LP-11 | Provide values at and beyond approved length boundaries | The page handles values without breaking layout or authenticating invalid data. | Salesforce field limits are not provided; obtain authoritative limits before setting boundary values. |
+| LP-12 | Submit using the Login button | The same result is observed as for the corresponding credential scenario. | Applicable to valid and invalid credential cases. |
+| LP-13 | Submit using Enter from an input field | Submission occurs only if the page supports this interaction; outcome matches the corresponding button submission. | Confirm supported behavior from the approved UI or acceptance criteria. |
+| LP-14 | Verify navigation after successful authentication | A successful login leaves the login page and reaches the approved post-login destination. | Blocked until a non-production account and expected destination are provided. |
+| SEC-01 | Use injection-like strings as field values | Input is treated as data; no authentication or unintended page execution occurs. | Authorized non-production org only; keep inputs bounded and non-destructive. |
+| SEC-02 | Use script-like text as field values | No script executes and no authenticated state is created. | Authorized non-production org only; observe rendered behavior without executing payloads outside the test form. |
+| SEC-03 | Repeat failed login attempts within an org-approved limit | Behavior matches the org's documented throttling or lockout policy. | Blocked until an authorized sandbox, policy, account, and safe attempt limit are confirmed. Do not probe the public endpoint. |
+| SEC-04 | Review test output and failure artifacts | Credentials and secrets are not written to logs, screenshots, reports, or committed files. | Applies to all test execution and evidence handling. |
+
+## 5. Test Approach, Levels, and Types
+
+- **Functional UI testing:** Selenium and TestNG against the approved login page for LP scenarios.
+- **Negative testing:** invalid, empty, malformed, whitespace-only, and boundary input classes; use only synthetic data unless an org owner approves otherwise.
+- **Security-oriented checks:** SEC scenarios are limited to authorized, controlled non-production testing. SEC-03 is blocked pending org policy and approval.
+- **Regression testing:** re-run the login-page suite after relevant changes.
+- **Browser coverage:** Chrome is the primary browser because it is the current configuration. Firefox and Edge are proposed additional targets where available; the exact browser matrix requires approval.
+- Use condition-based waits, isolated browser setup/teardown, and environment-provided credentials. Never include credentials in source code or evidence.
+
+## 6. Environment, Tools, Access, and Test Data
+
+Current configured environment:
+- Login URL: `https://login.salesforce.com/?locale=in`.
+- Operating system observed in prior test output: Windows 10.
+- Runtime/build: Java 25, Maven 3.9.11.
+- Test stack: Selenium 4.34.0 and TestNG 7.11.0.
+- Browser configuration default: Chrome; Firefox and Edge are also supported by the project.
+
+Access and test data:
+- No non-production Salesforce test account is currently available. LP-01 through LP-03 and LP-14 are blocked until one is provisioned.
+- Security tests that can affect lockout or rate limits require an authorized sandbox URL, org-owner approval, applicable policy, and safe attempt limit. These inputs have not been provided.
+- Use synthetic invalid values. Supply any approved valid credentials through the existing `SF_USERNAME` and `SF_PASSWORD` environment variables or the organization's approved secret mechanism. Do not place secrets in this plan.
+
+## 7. Entry and Exit Criteria
+
+Proposed entry criteria, pending approval:
+- Scope, browser matrix, and expected outcomes are approved.
+- The approved login URL is reachable and browser/driver setup is available.
+- A non-production account is provisioned for valid-login scenarios.
+- Security scenarios have explicit authorization, a sandbox URL, org policy, and safe attempt limits.
+- Test data is synthetic or explicitly approved; no production account is used.
+
+Proposed exit criteria, pending approval:
+- Every executable in-scope scenario has an execution result, or is explicitly recorded as blocked with its reason.
+- All executable scenarios pass, with no unresolved critical or high-severity defects.
+- Any required valid-login or security scenarios blocked by missing access are reported as not executed, not passed.
+- Test evidence contains no credentials or secrets.
+
+## 8. Roles, Responsibilities, Estimates, and Schedule
+
+Named owners and schedule were not provided. Proposed responsibilities:
+- **QA engineer:** maintain scenario traceability, execute approved tests, preserve sanitized evidence, and report defects.
+- **Salesforce org owner:** provide a non-production test account, confirm expected outcomes and org policies, approve security scope, and set safe attempt limits.
+- **Development team:** triage defects and support remediation or testability questions.
+
+Estimates and dates are not provided. Schedule should be agreed after environment and access prerequisites are met.
+
+## 9. Defect Management and Reporting
+
+For each defect, record a unique local defect ID, linked LP/SEC ID, environment, preconditions, synthetic test data, numbered reproduction steps, expected result, observed result, severity, priority, and sanitized evidence. Mark severity and priority as proposed until triage confirms them. Report blocked tests separately from failed tests. Do not attach credentials, session tokens, or unsanitized browser data.
+
+## 10. Risks, Dependencies, Assumptions, and Open Questions
+
+- The valid-login account is unavailable, so valid authentication and authenticated navigation cannot currently be executed.
+- Security tests involving repeated failures, lockout, or rate limiting require an authorized non-production Salesforce org and explicit owner approval; the public endpoint must not be used for these probes.
+- Salesforce public login behavior can vary due to A/B variants, MFA, CAPTCHA, network protections, or interstitial pages.
+- Exact error text, username normalization, field limits, Remember Me persistence, and lockout thresholds are not documented in the supplied materials; confirm these before treating them as acceptance criteria.
+- Previous test runs against the public page failed while waiting for the password field, and the valid-login test was skipped without credentials. This is existing environment evidence, not a result of this plan.
+
+## 11. Suspension and Resumption Criteria
+
+Suspend a test when:
+- The page presents an unexpected interstitial, MFA, CAPTCHA, or other control that invalidates the planned path.
+- The target is not confirmed as the approved environment.
+- A security test could exceed the org owner's safe attempt limit or risk account lockout.
+- Credentials or sensitive data appear in logs, screenshots, or other artifacts.
+
+Resume after the target, account, expected behavior, and any security limits are confirmed and the issue is cleared. Record suspended and blocked scenarios with the reason; do not report them as passed.
+
+## 12. Test Deliverables and Approval
+
+Deliverables:
+- This RICE POT Profile B test plan.
+- Scenario-to-local-ID coverage mapping in Section 4.
+- Execution summary with passed, failed, blocked, and not-run scenarios.
+- Defect records and sanitized evidence, where applicable.
+
+Plan approval was provided by the requester on 2026-10-06. The plan is not evidence that tests have been executed. Pending prerequisites remain: non-production test account; sandbox URL and explicit security-test authorization; confirmation of undocumented acceptance details and proposed exit thresholds.
