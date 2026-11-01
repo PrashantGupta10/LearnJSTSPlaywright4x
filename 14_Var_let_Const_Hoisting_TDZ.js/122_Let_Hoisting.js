@@ -1,3 +1,3 @@
-// console.log(greeting); // Error 
+console.log(greeting); // Error 
 let greeting = "Hello";
 console.log(greeting);

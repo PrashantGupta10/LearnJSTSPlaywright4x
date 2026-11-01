@@ -1,7 +1,7 @@
 let url = "https://app.vwo.com";
 let status = 'pass';
 let message = `Test completed in ${320}ms`;
-console.log(message);
+console.log(message);// Test completed in 320ms
 
 
 // Single quotes
