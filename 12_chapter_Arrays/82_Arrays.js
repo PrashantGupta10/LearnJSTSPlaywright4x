@@ -3,10 +3,10 @@ let browsers = ["chrome", "firefox", "safari"];
 let scores = new Array(3); // creates empty array of length 3
 scores[0] = "1";
 scores[1] = "2";
-console.log(scores); // ["1", undefined, undefined]
+console.log(scores); // [ '1', '2', <1 empty item> ]
 
 let scores2 = new Array(1,2,3);
-console.log(scores2); // [1,2,3]
+console.log(scores2); // [ 1, 2, 3 ]
 
 let numbers = new Array(100,200,300,400);
 console.log(numbers);

@@ -2,19 +2,19 @@ let arr=[1,2,3];
 console.log(arr);
 
 arr.push(4);//add element at last position
-console.log(arr)
+console.log(arr);// [1, 2, 3, 4]
 
 arr.pop();//remove last element
-console.log(arr);                                                           
+console.log(arr); // [1, 2, 3]                                                           
 
 arr.push(5,6);
-console.log(arr);
+console.log(arr);// [1, 2, 3, 5, 6]
 
 arr.unshift(0);//add element at first position
-console.log(arr);
+console.log(arr);// [0, 1, 2, 3, 5, 6]
 
-arr.shift(); //remove first element
-console.log(arr);
+arr.shift(); //remove first element 
+console.log(arr);// [1, 2, 3, 5, 6]
 
 arr.splice(2,1); //removes 3 at index 2 → [1, 2, 5, 6]
 console.log(arr);

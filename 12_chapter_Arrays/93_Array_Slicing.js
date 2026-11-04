@@ -6,8 +6,8 @@ let arr = [1, 2, 3, 4, 5];
 // Don't give the end, it will automatically 
 // take from start to end.
 
-console.log(arr.slice(1, 3));// returns [2, 3]
-console.log(arr);
+console.log(arr.slice(1, 3));// returns [2, 3]  //  index = 1,2
+console.log(arr);// returns [1, 2, 3, 4, 5]  //  original array is not mutated
 
 console.log(arr.slice(2));// returns [3, 4, 5]
 
